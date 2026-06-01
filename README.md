@@ -99,7 +99,7 @@ https://www.behance.net/gallery/231348319/Stryde-GPS-App
 
 **Pantallazo:**  
 
-![Stryde GPS Dashboard](https://www.behance.net/gallery/231348319/Stryde-GPS-App/modules/1334800971)
+![Stryde GPS Dashboard](https://raw.githubusercontent.com/jjugodemango/DNO-WEB-FINAL/refs/heads/main/Screenshot%202026-05-31%20232631.png)
 
 ### Aspectos positivos a rescatar
 
@@ -141,21 +141,5 @@ https://www.behance.net/gallery/241989129/Petronex-Oil-Gas-SaaS-Dashboard-UX-UI-
 
 # Moodboard de Referentes
 
-Inspiración visual:
-
-* Sistemas de mapas interactivos.
-* Interfaces de geolocalización.
-* Aplicaciones de movilidad urbana.
-* Plataformas de salud digital.
-* Dashboards de Smart Cities.
-
-Elementos visuales:
-
-* Paleta basada en azul sanitario, blanco y tonos neutros.
-* Íconos médicos y farmacéuticos.
-* Mapas con capas de información.
-* Tarjetas KPI para indicadores rápidos.
-* Visualizaciones geoespaciales minimalistas.
-* Diseño accesible para adultos mayores.
-
-La propuesta busca combinar análisis territorial, accesibilidad ciudadana y visualización de datos de salud pública en una plataforma intuitiva y contemporánea.
+Moodboard generado con Gemini
+![Moodboard}()
