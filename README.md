@@ -76,7 +76,7 @@ Link:
 https://www.chileatiende.gob.cl
 
 Pantallazo:
-![ChileAtiende](raw.githubusercontent.com/jjugodemango/DNO-WEB-FINAL/refs/heads/main/Screenshot 2026-05-31 225730.png)
+![ChileAtiende](https://raw.githubusercontent.com/jjugodemango/DNO-WEB-FINAL/refs/heads/main/Screenshot%202026-05-31%20225730.png)
 
 ### Aspectos positivos a rescatar
 
@@ -123,7 +123,7 @@ https://www.behance.net/gallery/241989129/Petronex-Oil-Gas-SaaS-Dashboard-UX-UI-
 
 **Pantallazo:**  
 
-![Petronex Dashboard](https://raw.githubusercontent.com/jjugodemango/DNO-WEB-FINAL/refs/heads/main/Screenshot%202026-05-31%20231241.png)
+![Petronex Dashboard](https://raw.githubusercontent.com/jjugodemango/DNO-WEB-FINAL/refs/heads/main/Screenshot%202026-05-31%20231055.png)
 
 ### Aspectos positivos a rescatar
 
