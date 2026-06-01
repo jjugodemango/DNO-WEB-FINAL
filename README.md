@@ -137,8 +137,9 @@ https://www.behance.net/gallery/241989129/Petronex-Oil-Gas-SaaS-Dashboard-UX-UI-
 - Exceso de información en una sola pantalla.
 - Gráficos complejos para usuarios ocasionales.
 
+Hasta este punto, se utilizó inteligencia artificial para formatear y sintetizar mejor los contenidos.
 ---
 
 # Moodboard de Referentes
-
+![moodboard](https://raw.githubusercontent.com/jjugodemango/DNO-WEB-FINAL/refs/heads/main/Slide%204_3%20-%201(1).png)
 
