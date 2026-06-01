@@ -141,5 +141,4 @@ https://www.behance.net/gallery/241989129/Petronex-Oil-Gas-SaaS-Dashboard-UX-UI-
 
 # Moodboard de Referentes
 
-Moodboard generado con Gemini
-![Moodboard}()
+
