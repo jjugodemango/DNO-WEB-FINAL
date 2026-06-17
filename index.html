@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Farmacias de turno</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+        
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        :root {
+            /* puedes hacer definiciones como si fueran variables, usar cuando no estas decidido de algo*/
+            --fondo: #aac4b2;
+            --figura: #0a8129ff;
+            --destaque: #342f46;
+            --textos1: "Funnel Display", sans-serif;
+            --textos2: "Barlow", sans-serif;
+        }
+        body {
+
+            font-family: var(--textos2);
+            color: var(--figura);
+            background: var(--fondo);
+        }
+        
+        #map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+        }
+
+        .top-panel {
+            position: absolute;
+            z-index: 1000;
+            width: 100vw;
+            height: 2rem;
+            top: 0;
+            padding: 1rem;
+            background-color: #fff;
+            border: 1px solid #b9b9b9;
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+
+        }
+        
+        .panel {
+            position: absolute;
+            top: 5rem;
+            left: 1rem;
+            display: grid;
+            gap: .2rem;
+            z-index: 1000;        
+            background-color: #fff;
+            border-radius: .5rem;
+            padding: 2rem;
+            border: 1px solid #b9b9b9;
+            max-width: fit-content;
+        }
+
+        .contenedor-R, .contenedor-C {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1rem;
+        }
+
+        .filtro-wrapper {
+            margin-top: .5rem;
+        
+        }
+        select{
+            padding: .5rem;
+            border-radius: 10rem;
+            background-color: #F4F0FA;
+            width: 15rem;
+        }
+
+    </style>
+    </head>
+    
+    
+    <body>
+
+        <div class="top-panel">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+            </svg>
+
+            <h2>Busca farmacias de turno cerca tuyo!</h2>
+            
+        </div>
+
+        <div class="panel">
+        
+            <div class="contenedor-R">
+                <label for="filtro-region">Región:</label>
+                <div class="filtro-wrapper">
+                    <select id="filtro-region">
+                        <option id="cajita-1" value="">— Selecciona una región —</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="contenedor-C">
+                <label for="filtro-comuna">Comuna:</label>
+                <div class="filtro-wrapper">
+                    <select id="filtro-comuna">
+                        <option id="cajita-2" value="">— Selecciona una comuna —</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="btn-limpiar">Limpiar filtros</button>
+        </div>
+
+        <div id="map"></div>
+
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+        <script>
+            const map = L.map('map', { zoomControl: false }).setView([-35.6751, -71.5430], 5);
+            L.control.zoom({ position: 'bottomright' }).addTo(map);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '© OpenStreetMap © CARTO',
+                maxZoom: 19
+            }).addTo(map);
+
+            const nombreRegion = {
+                1:"Arica y Parinacota", 2:"Tarapacá", 3:"Antofagasta", 4:"Atacama",
+                5:"Coquimbo", 6:"Valparaíso", 7:"Metropolitana", 8:"O'Higgins",
+                9:"Maule", 10:"Biobío", 11:"La Araucanía", 12:"Los Ríos",
+                13:"Los Lagos", 14:"Aysén", 15:"Magallanes", 16:"Ñuble"
+            };
+
+            const ordenRegiones = [1, 2, 3, 4, 5, 6, 7, 8, 9, 16, 10, 11, 12, 13, 14, 15];
+            const vistasRegion = {
+                1:{ coords:[-18.48,-70.32], zoom:10 },
+                2:{ coords:[-20.21,-70.15], zoom:10 },
+                3:{ coords:[-23.65,-70.40], zoom:10 },
+                4:{ coords:[-27.37,-70.33], zoom:10 },
+                5:{ coords:[-29.95,-71.34], zoom:10 },
+                6:{ coords:[-33.05,-71.62], zoom:10 },
+                7:{ coords:[-33.45,-70.65], zoom:11 },
+                8:{ coords:[-34.17,-70.74], zoom:10 },
+                9:{ coords:[-35.43,-71.67], zoom:10 },
+                16:{ coords:[-36.60,-71.95], zoom:10 },
+                10:{ coords:[-37.47,-72.35], zoom:10 },
+                11:{ coords:[-38.74,-72.60], zoom:10 },
+                12:{ coords:[-39.82,-73.24], zoom:10 },
+                13:{ coords:[-40.57,-73.14], zoom:10 },
+                14:{ coords:[-45.57,-72.07], zoom:7 },
+                15:{ coords:[-53.16,-70.91], zoom:7 }
+            };
+
+            const selectRegion = document.getElementById("filtro-region");
+            const selectComuna = document.getElementById("filtro-comuna");
+            let todasLasFarmacias = [];
+
+            // ── CLUSTER GROUP (contenedor de todos los markers) ──────────────────────────
+            const clusterGroup = L.markerClusterGroup();
+            map.addLayer(clusterGroup);
+
+            // ── HELPER: crear popup de una farmacia ─────────────────────────────────────
+            function crearPopup(x) {
+                return `
+                    <strong>${x.local_nombre}</strong><br>
+                    ${x.local_direccion}<br>
+                    📞 ${x.local_telefono || "Sin teléfono"}<br>
+                    🕐 ${x.funcionamiento_hora_apertura} – ${x.funcionamiento_hora_cierre}
+                `;
+            }
+
+            // ── HELPER: coordenadas válidas ──────────────────────────────────────────────
+            function coordsValidas(lat, lng) {
+                return !isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
+            }
+
+            // ── MOSTRAR FARMACIAS en el cluster ─────────────────────────────────────────
+            function mostrarFarmacias(lista) {
+                clusterGroup.clearLayers();
+                lista.forEach(x => {
+                    const lat = parseFloat(String(x.local_lat).replace(",", "."));
+                    const lng = parseFloat(String(x.local_lng).replace(",", "."));
+                    if (!coordsValidas(lat, lng)) return;
+                    L.marker([lat, lng]).bindPopup(crearPopup(x));
+                    clusterGroup.addLayer(L.marker([lat, lng]).bindPopup(crearPopup(x)));
+                });
+            }
+
+            // ── FETCH ────────────────────────────────────────────────────────────────────
+            fetch("https://raw.githubusercontent.com/jjugodemango/DNO-WEB-FINAL/refs/heads/main/farmacias%20chile.json")
+                .then(res => { if (!res.ok) throw new Error("HTTP " + res.status); return res.json(); })
+                .then(datos => {
+                    todasLasFarmacias = datos;
+
+                    // Poblar select de regiones
+                    const FRegiones = new Set(todasLasFarmacias.map(x => Number(x.fk_region)));
+                    ordenRegiones.forEach(id => {
+                        if (!FRegiones.has(id)) return;
+                        const opt = document.createElement("option");
+                        opt.value = id;
+                        opt.textContent = nombreRegion[id];
+                        selectRegion.appendChild(opt);
+                    });
+
+                    // Mostrar TODAS las farmacias al cargar
+                    mostrarFarmacias(todasLasFarmacias);
+                })
+                .catch(err => console.error("Error:", err));
+
+            // ── REGIÓN ───────────────────────────────────────────────────────────────────
+            selectRegion.addEventListener("change", function () {
+                const id = Number(this.value);
+
+                selectComuna.innerHTML = '<option value="">— Selecciona una comuna —</option>';
+
+                if (!id) {
+                    // Sin región → mostrar todas
+                    mostrarFarmacias(todasLasFarmacias);
+                    map.setView([-35.6751, -71.5430], 5, { animate: true });
+                    return;
+                }
+
+                // Mover mapa y mostrar farmacias de esa región
+                if (vistasRegion[id]) map.setView(vistasRegion[id].coords, vistasRegion[id].zoom, { animate: true });
+
+                const deEstaRegion = todasLasFarmacias.filter(x => Number(x.fk_region) === id);
+                mostrarFarmacias(deEstaRegion);
+
+                // Poblar comunas
+                const comunas = [...new Set(deEstaRegion.map(x => x.comuna_nombre))].sort();
+                comunas.forEach(nombre => {
+                    const opt = document.createElement("option");
+                    opt.value = nombre;
+                    opt.textContent = nombre;
+                    selectComuna.appendChild(opt);
+                });
+            });
+
+            // ── COMUNA ───────────────────────────────────────────────────────────────────
+            selectComuna.addEventListener("change", function () {
+                const comuna = this.value;
+                const regionId = Number(selectRegion.value);
+
+                if (!comuna) {
+                    // Sin comuna → mostrar toda la región
+                    mostrarFarmacias(todasLasFarmacias.filter(x => Number(x.fk_region) === regionId));
+                    return;
+                }
+
+                const filtradas = todasLasFarmacias.filter(x =>
+                    Number(x.fk_region) === regionId && x.comuna_nombre === comuna
+                );
+                mostrarFarmacias(filtradas);
+
+                // Centrar en los markers de la comuna
+                const bounds = filtradas
+                    .map(x => [parseFloat(x.local_lat), parseFloat(x.local_lng)])
+                    .filter(([lat, lng]) => coordsValidas(lat, lng));
+                if (bounds.length > 0) map.fitBounds(bounds, { padding: [40, 40] });
+            });
+
+            // ── LIMPIAR ───────────────────────────────────────────────────────────────────
+            document.getElementById("btn-limpiar").addEventListener("click", function () {
+                selectRegion.value = "";
+                selectComuna.innerHTML = '<option value="">— Selecciona una comuna —</option>';
+                mostrarFarmacias(todasLasFarmacias);
+                map.setView([-35.6751, -71.5430], 5, { animate: true });
+            });
+        </script>
+        
+        
+        
+
+    </body>
+</html>
